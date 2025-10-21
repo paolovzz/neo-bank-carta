@@ -15,7 +15,8 @@ public class CartaCreataConverter
             domainEvent.usernameCliente().username(),
             domainEvent.numeroCarta().numero(),
             domainEvent.iban().codice(),
-            domainEvent.dataCreazione().dataOra(),
+            domainEvent.dataEmissione().dataOra(),
+            domainEvent.dataScadenza().dataOra(),
             domainEvent.saldoDisponibile()
         );
     }

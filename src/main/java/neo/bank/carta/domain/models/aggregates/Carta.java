@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import neo.bank.carta.domain.exceptions.BusinessRuleException;
+import neo.bank.carta.domain.models.enums.StatoCarta;
 import neo.bank.carta.domain.models.events.CartaAttivata;
 import neo.bank.carta.domain.models.events.CartaBloccata;
 import neo.bank.carta.domain.models.events.CartaCreata;
@@ -17,7 +18,8 @@ import neo.bank.carta.domain.models.events.PagamentiOnlineAbilitati;
 import neo.bank.carta.domain.models.events.PagamentiOnlineNonAbilitati;
 import neo.bank.carta.domain.models.events.SogliaPagamentiGiornalieriImpostata;
 import neo.bank.carta.domain.models.events.SogliaPagamentiMensiliImpostata;
-import neo.bank.carta.domain.models.vo.DataCreazione;
+import neo.bank.carta.domain.models.vo.DataEmissione;
+import neo.bank.carta.domain.models.vo.DataScadenza;
 import neo.bank.carta.domain.models.vo.Iban;
 import neo.bank.carta.domain.models.vo.IdCarta;
 import neo.bank.carta.domain.models.vo.NumeroCarta;
@@ -37,12 +39,13 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
     private IdCarta idCarta;
     private int sogliaPagamentiGiornaliera = 2500;
     private int sogliaPagamentiMensile = 3000;
-    private DataCreazione dataCreazione;
+    private DataEmissione dataEmissione;
+    private DataScadenza dataScadenza;
     private double saldoDisponibile = 0;
     private Iban iban;
     private UsernameCliente usernameCliente;
     private NumeroCarta numeroCarta;
-    private boolean cartaAttivata;
+    private StatoCarta statoCarta;
     private boolean pagamentiOnlineAbilitati;
 
     public static Carta crea(GeneratoreNumeroCartaService generatoreNumeroCartaService, AnagraficaContoCorrenteService anagraficaCCService, UsernameCliente usernameCliente, Iban iban) {
@@ -51,11 +54,14 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
             throw new BusinessRuleException("Durante la creazione della carta si e' verificato un errore durante la verifica dell'iban e del cliente");
         }
         IdCarta idCarta =new IdCarta(UUID.randomUUID().toString());
-        DataCreazione dataCreazione = new DataCreazione(LocalDateTime.now(ZoneOffset.UTC));
+        NumeroCarta numeroCarta = generatoreNumeroCartaService.genera();
+        DataEmissione dataCreazione = new DataEmissione(LocalDateTime.now(ZoneOffset.UTC));
+        DataScadenza dataScadenza = new DataScadenza(LocalDateTime.now(ZoneOffset.UTC).plusYears(5));
         double saldo = 0;
         Carta cartaPrepagata = new Carta();
         cartaPrepagata.idCarta = idCarta;
-        cartaPrepagata.events(new CartaCreata(idCarta, usernameCliente, generatoreNumeroCartaService.genera(), iban, dataCreazione, saldo));
+        cartaPrepagata.numeroCarta = numeroCarta;
+        cartaPrepagata.events(new CartaCreata(idCarta, usernameCliente, numeroCarta, iban, dataCreazione, dataScadenza, saldo));
         return cartaPrepagata;
     }
 
@@ -96,7 +102,9 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
     }
 
     private void apply(CartaCreata event) {
-        this.dataCreazione = event.dataCreazione();
+        this.dataEmissione = event.dataEmissione();
+        this.dataScadenza = event.dataScadenza();
+        this.statoCarta = StatoCarta.ATTIVA;
         this.iban = event.iban();
         this.idCarta = event.idCarta();
         this.saldoDisponibile = event.saldoDisponibile();
@@ -120,11 +128,11 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
     }
 
     private void apply(CartaAttivata event) {
-        cartaAttivata = true;
+       this.statoCarta = StatoCarta.ATTIVA;
     }
 
     private void apply(CartaBloccata event) {
-        cartaAttivata = false;
+       this.statoCarta = StatoCarta.BLOCCATA;
     }
 
     @Override

@@ -11,6 +11,7 @@ public class IECartaCreata implements Serializable {
     private String usernameCliente;
     private String numeroCarta;
     private String iban;
-    private LocalDateTime dataCreazione;
+    private LocalDateTime dataEmissione;
+    private LocalDateTime dataScadenza;
     private double saldoDisponibile;
 }

@@ -41,6 +41,7 @@ public class CartaUseCase {
         log.info("Comando [creaCarta] in esecuzione...");
         Carta carta = Carta.crea(generatoreNumeroCartaService, anagraficaContoCorrenteService, cmd.getUsernameCliente(), cmd.getIban());
         cartaOutputPort.salva(carta);
+        numeroCartaProjectionRepositoryPort.salva(carta.getNumeroCarta(), carta.getIdCarta());
         log.info("Comando [creaCarta] terminato...");
     }
 

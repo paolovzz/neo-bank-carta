@@ -5,7 +5,7 @@ import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.RequiredArgsConstructor;
-import neo.bank.carta.application.exceptions.CartaPrepagataNonTrovataException;
+import neo.bank.carta.application.exceptions.CartaNonTrovataException;
 import neo.bank.carta.application.ports.output.CartaOutputPort;
 import neo.bank.carta.application.ports.output.CartaRepositoryPort;
 import neo.bank.carta.application.ports.output.EventsPublisherPort;
@@ -32,7 +32,7 @@ public class CartaOutputAdapter  implements CartaOutputPort{
     public Carta recuperaDaId(IdCarta idCartaPrepagata) {
         Carta cliente = ccRepo.findById(idCartaPrepagata.id());
         if(cliente == null) {
-            throw new CartaPrepagataNonTrovataException(idCartaPrepagata.id());
+            throw new CartaNonTrovataException(idCartaPrepagata.id());
         }
        return cliente;
     }

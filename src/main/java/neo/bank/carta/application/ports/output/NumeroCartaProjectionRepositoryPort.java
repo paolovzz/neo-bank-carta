@@ -5,6 +5,6 @@ import neo.bank.carta.domain.models.vo.NumeroCarta;
 
 public interface NumeroCartaProjectionRepositoryPort {
     
-    public void salva(NumeroCarta username, IdCarta idCarta);
-    public IdCarta recuperaDaNumeroCarta (NumeroCarta username);
+    public void salva(NumeroCarta numeroCarta, IdCarta idCarta);
+    public IdCarta recuperaDaNumeroCarta (NumeroCarta numeroCarta);
 }
