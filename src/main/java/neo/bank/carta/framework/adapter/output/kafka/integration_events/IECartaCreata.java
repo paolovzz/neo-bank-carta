@@ -1,0 +1,16 @@
+package neo.bank.carta.framework.adapter.output.kafka.integration_events;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import lombok.Value;
+
+@Value
+public class IECartaCreata implements Serializable {
+    private String idCartaPrepagata;
+    private String usernameCliente;
+    private String numeroCarta;
+    private String iban;
+    private LocalDateTime dataCreazione;
+    private double saldoDisponibile;
+}
