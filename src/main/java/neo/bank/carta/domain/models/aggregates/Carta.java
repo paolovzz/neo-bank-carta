@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import neo.bank.carta.domain.exceptions.BusinessRuleException;
+import neo.bank.carta.domain.models.enums.AbilitazionePagamentoOnline;
 import neo.bank.carta.domain.models.enums.StatoCarta;
 import neo.bank.carta.domain.models.events.CartaAttivata;
 import neo.bank.carta.domain.models.events.CartaBloccata;
@@ -22,8 +23,10 @@ import neo.bank.carta.domain.models.vo.DataEmissione;
 import neo.bank.carta.domain.models.vo.DataScadenza;
 import neo.bank.carta.domain.models.vo.Iban;
 import neo.bank.carta.domain.models.vo.IdCarta;
+import neo.bank.carta.domain.models.vo.IntestatarioCarta;
 import neo.bank.carta.domain.models.vo.NumeroCarta;
 import neo.bank.carta.domain.models.vo.UsernameCliente;
+import neo.bank.carta.domain.services.AnagraficaClienteService;
 import neo.bank.carta.domain.services.AnagraficaContoCorrenteService;
 import neo.bank.carta.domain.services.GeneratoreNumeroCartaService;
 
@@ -46,46 +49,61 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
     private UsernameCliente usernameCliente;
     private NumeroCarta numeroCarta;
     private StatoCarta statoCarta;
-    private boolean pagamentiOnlineAbilitati;
+    private AbilitazionePagamentoOnline abilitazionePagamentoOnline = AbilitazionePagamentoOnline.DISABILITATA;
+    private IntestatarioCarta intestatarioCarta;
 
-    public static Carta crea(GeneratoreNumeroCartaService generatoreNumeroCartaService, AnagraficaContoCorrenteService anagraficaCCService, UsernameCliente usernameCliente, Iban iban) {
+    public static Carta crea(GeneratoreNumeroCartaService generatoreNumeroCartaService, AnagraficaContoCorrenteService anagraficaCCService, UsernameCliente usernameCliente, Iban iban, AnagraficaClienteService anagraficaClienteService) {
         
         if(!anagraficaCCService.richiediVerificaContoCorrente(usernameCliente, iban)) {
-            throw new BusinessRuleException("Durante la creazione della carta si e' verificato un errore durante la verifica dell'iban e del cliente");
+            throw new BusinessRuleException("Si e' verificato un errore durante la verifica dell'iban e del cliente");
         }
+        IntestatarioCarta intestatarioCarta = anagraficaClienteService.richiediVerificaCliente(usernameCliente);
         IdCarta idCarta =new IdCarta(UUID.randomUUID().toString());
         NumeroCarta numeroCarta = generatoreNumeroCartaService.genera();
         DataEmissione dataCreazione = new DataEmissione(LocalDateTime.now(ZoneOffset.UTC));
         DataScadenza dataScadenza = new DataScadenza(LocalDateTime.now(ZoneOffset.UTC).plusYears(5));
         double saldo = 0;
-        Carta cartaPrepagata = new Carta();
-        cartaPrepagata.idCarta = idCarta;
-        cartaPrepagata.numeroCarta = numeroCarta;
-        cartaPrepagata.events(new CartaCreata(idCarta, usernameCliente, numeroCarta, iban, dataCreazione, dataScadenza, saldo));
-        return cartaPrepagata;
+        Carta carta = new Carta();
+        carta.idCarta = idCarta;
+        carta.numeroCarta = numeroCarta;
+        carta.intestatarioCarta = intestatarioCarta;
+        carta.events(new CartaCreata(idCarta, usernameCliente, numeroCarta, iban, dataCreazione, dataScadenza, saldo, intestatarioCarta));
+        return carta;
     }
 
-    public void impostaSogliaPagamentoGiornaliero(UsernameCliente usernameCliente, int nuovaSogliaPagamento) {
-        if(nuovaSogliaPagamento > sogliaPagamentiGiornaliera) {
+    public void impostaSogliaPagamentoGiornaliero(Iban iban, UsernameCliente usernameCliente, int nuovaSogliaPagamento) {
+        if(nuovaSogliaPagamento > sogliaPagamentiMensile) {
             throw new BusinessRuleException(String.format("La Soglia pagamenti giornaliero non puo' essere maggiore della soglia pagamenti mensile"));  
         }
         if(!usernameCliente.equals(this.usernameCliente)) {
-            throw new BusinessRuleException(String.format("Cliente non autorizzato ad operare sulla carta %s", usernameCliente));  
+            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.username()));  
+        }
+        if(!iban.equals(this.iban)) {
+            throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
         }
         events(new SogliaPagamentiGiornalieriImpostata(nuovaSogliaPagamento));
     }
 
-    public void impostaSogliaPagamentoMensile(UsernameCliente usernameCliente, int nuovaSogliaPagamento) {
-        if(nuovaSogliaPagamento < sogliaPagamentiMensile) {
+    public void impostaSogliaPagamentoMensile(Iban iban, UsernameCliente usernameCliente, int nuovaSogliaPagamento) {
+        if(nuovaSogliaPagamento < sogliaPagamentiGiornaliera) {
             throw new BusinessRuleException(String.format("Soglia pagamenti mensile non puo' essere maggiore della soglia pagamenti giornaliera"));  
         }
         if(!usernameCliente.equals(this.usernameCliente)) {
-            throw new BusinessRuleException(String.format("Cliente non autorizzato ad operare sulla carta %s", usernameCliente));  
+            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.username()));  
+        }
+        if(!iban.equals(this.iban)) {
+            throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
         }
         events(new SogliaPagamentiMensiliImpostata(nuovaSogliaPagamento));
     }
 
-    public void impostaAbilitazionePagamentiOnline(UsernameCliente usernameCliente, boolean abilitazionePagamentiOnline) {
+    public void impostaAbilitazionePagamentiOnline(Iban iban, UsernameCliente usernameCliente, boolean abilitazionePagamentiOnline) {
+        if(!usernameCliente.equals(this.usernameCliente)) {
+            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.username()));  
+        }
+        if(!iban.equals(this.iban)) {
+            throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
+        }
         if(abilitazionePagamentiOnline) {
             events(new PagamentiOnlineAbilitati());
         } else {
@@ -93,7 +111,13 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
         }
     }
 
-    public void impostaStatoCarta(UsernameCliente usernameCliente, boolean statoCarta) {
+    public void impostaStatoCarta(Iban iban, UsernameCliente usernameCliente, boolean statoCarta) {
+        if(!usernameCliente.equals(this.usernameCliente)) {
+            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.username()));  
+        }
+        if(!iban.equals(this.iban)) {
+            throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
+        }
         if(statoCarta) {
             events(new CartaAttivata());
         } else {
@@ -108,6 +132,9 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
         this.iban = event.iban();
         this.idCarta = event.idCarta();
         this.saldoDisponibile = event.saldoDisponibile();
+        this.usernameCliente = event.usernameCliente();
+        this.numeroCarta = event.numeroCarta();
+        this.intestatarioCarta = event.intestatarioCarta();
 
     }
 
@@ -120,11 +147,11 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
     }
 
     private void apply(PagamentiOnlineAbilitati event) {
-        pagamentiOnlineAbilitati = true;
+        abilitazionePagamentoOnline = AbilitazionePagamentoOnline.ATTIVATA;
     }
 
     private void apply(PagamentiOnlineNonAbilitati event) {
-        pagamentiOnlineAbilitati = false;
+        abilitazionePagamentoOnline = AbilitazionePagamentoOnline.DISABILITATA;
     }
 
     private void apply(CartaAttivata event) {

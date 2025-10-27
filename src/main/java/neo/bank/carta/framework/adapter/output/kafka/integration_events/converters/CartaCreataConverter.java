@@ -17,7 +17,8 @@ public class CartaCreataConverter
             domainEvent.iban().codice(),
             domainEvent.dataEmissione().dataOra(),
             domainEvent.dataScadenza().dataOra(),
-            domainEvent.saldoDisponibile()
+            domainEvent.saldoDisponibile(),
+            domainEvent.intestatarioCarta().intestatario()
         );
     }
 

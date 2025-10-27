@@ -7,11 +7,12 @@ import lombok.Value;
 
 @Value
 public class IECartaCreata implements Serializable {
-    private String idCartaPrepagata;
+    private String idCarta;
     private String usernameCliente;
     private String numeroCarta;
     private String iban;
     private LocalDateTime dataEmissione;
     private LocalDateTime dataScadenza;
     private double saldoDisponibile;
+    private String intestatario;
 }

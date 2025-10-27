@@ -1,5 +1,7 @@
 package neo.bank.carta.framework.adapter.input.rest;
 
+import java.util.List;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -22,6 +24,7 @@ import neo.bank.carta.application.ports.input.dto.ImpostaSogliaPagamentiGiornali
 import neo.bank.carta.application.ports.input.dto.ImpostaSogliaPagamentiMensileCmd;
 import neo.bank.carta.application.ports.input.dto.ImpostaStatoCartaCmd;
 import neo.bank.carta.domain.models.aggregates.Carta;
+import neo.bank.carta.domain.models.vo.DatiCartaView;
 import neo.bank.carta.domain.models.vo.Iban;
 import neo.bank.carta.domain.models.vo.NumeroCarta;
 import neo.bank.carta.domain.models.vo.UsernameCliente;
@@ -48,6 +51,14 @@ public class CartaResource {
         Carta carta = app.recuperaCartaDaNumeroCarta(new NumeroCarta(numeroCarta));
         CartaInfoResponse bodyResponse = new CartaInfoResponse(carta);
         return Response.ok(bodyResponse).build();
+    }
+
+    @Path("/iban/{iban}")
+    @GET
+    @Produces(value = MediaType.APPLICATION_JSON)
+    public Response recuperaCarteDaIban(@PathParam(value = "iban") String iban) {
+        List<DatiCartaView> carte = app.recuperaCarteDaIban(new Iban(iban));
+        return Response.ok(carte).build();
     }
 
     @Path("/soglia-pagamenti-giornaliera")

@@ -29,10 +29,10 @@ public class CartaOutputAdapter  implements CartaOutputPort{
     }
 
     @Override
-    public Carta recuperaDaId(IdCarta idCartaPrepagata) {
-        Carta cliente = ccRepo.findById(idCartaPrepagata.id());
+    public Carta recuperaDaId(IdCarta idCarta) {
+        Carta cliente = ccRepo.findById(idCarta.id());
         if(cliente == null) {
-            throw new CartaNonTrovataException(idCartaPrepagata.id());
+            throw new CartaNonTrovataException(idCarta);
         }
        return cliente;
     }

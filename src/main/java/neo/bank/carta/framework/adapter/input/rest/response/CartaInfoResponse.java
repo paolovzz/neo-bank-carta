@@ -8,7 +8,7 @@ import neo.bank.carta.domain.models.aggregates.Carta;
 @Getter
 public class CartaInfoResponse {
    
-    private String idCartaPrepagata;
+    private String idCarta;
     private int sogliaPagamentiGiornaliera;
     private int sogliaPagamentiMensile;
     private LocalDateTime dataEmissione;
@@ -18,9 +18,12 @@ public class CartaInfoResponse {
     private String iban;
     private String usernameCliente;
     private String numeroCarta;
+    private String abilitazionePagamentiOnline;
+    private String intestatario;
+
 
     public CartaInfoResponse(Carta carta) {
-        this.idCartaPrepagata = carta.getIdCarta().id();
+        this.idCarta = carta.getIdCarta().id();
         this.sogliaPagamentiGiornaliera = carta.getSogliaPagamentiGiornaliera();
         this.sogliaPagamentiMensile = carta.getSogliaPagamentiMensile();
         this.dataEmissione = carta.getDataEmissione().dataOra();
@@ -30,7 +33,8 @@ public class CartaInfoResponse {
         this.usernameCliente = carta.getUsernameCliente().username();
         this.numeroCarta = carta.getNumeroCarta().numero();
         this.saldoDisponibile = carta.getSaldoDisponibile();
-
+        this.abilitazionePagamentiOnline = carta.getAbilitazionePagamentoOnline().name();
+        this.intestatario = carta.getIntestatarioCarta().intestatario();
     }
 
     

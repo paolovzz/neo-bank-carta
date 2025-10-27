@@ -1,8 +1,14 @@
 package neo.bank.carta.framework.adapter.input.rest.request;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Value
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class ImpostaSogliaPagamentiRequest {
     private String numeroCarta;
     private String iban;

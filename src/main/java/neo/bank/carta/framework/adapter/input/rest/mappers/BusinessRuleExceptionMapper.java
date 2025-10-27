@@ -3,16 +3,16 @@ package neo.bank.carta.framework.adapter.input.rest.mappers;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import neo.bank.carta.application.exceptions.CartaNonTrovataException;
+import neo.bank.carta.domain.exceptions.BusinessRuleException;
 import neo.bank.carta.framework.adapter.input.rest.response.ErrorResponse;
 
 @Provider
-public class CartaNonTrovataExceptionMapper implements ExceptionMapper<CartaNonTrovataException> {
+public class BusinessRuleExceptionMapper implements ExceptionMapper<BusinessRuleException> {
 
     @Override
-    public Response toResponse(CartaNonTrovataException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage());
-        return Response.status(404)
+    public Response toResponse(BusinessRuleException exception) {
+        ErrorResponse errorResponse = new ErrorResponse( exception.getMessage());
+        return Response.status(422)
                        .entity(errorResponse)
                        .build();
     }

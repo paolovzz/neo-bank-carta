@@ -14,9 +14,9 @@ public class NumeroCartaProjectionRepositoryImpl implements PanacheMongoReposito
     
     
     @Override
-    public void salva(NumeroCarta numeroCarta, IdCarta idCartaPrepagata) {
+    public void salva(NumeroCarta numeroCarta, IdCarta idCarta) {
         log.info("Aggiorno la projection...");
-        persist(new NumeroCartaProjectionEntity(numeroCarta.numero(), idCartaPrepagata.id()));
+        persist(new NumeroCartaProjectionEntity(numeroCarta.numero(), idCarta.id()));
     }
 
     @Override
