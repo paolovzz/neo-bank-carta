@@ -125,6 +125,12 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
         }
     }
 
+     public void verificaAccessoCliente(UsernameCliente usernameCliente) {
+        if( !this.usernameCliente.equals(usernameCliente)){
+            throw new BusinessRuleException(String.format("Accesso alla carta non autorizzato per il cliente [%s]", usernameCliente.username()));
+        }
+    }
+
     private void apply(CartaCreata event) {
         this.dataEmissione = event.dataEmissione();
         this.dataScadenza = event.dataScadenza();

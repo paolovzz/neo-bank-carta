@@ -11,12 +11,13 @@ import neo.bank.carta.application.ports.input.dto.ImpostaAbilitazionePagamentiOn
 import neo.bank.carta.application.ports.input.dto.ImpostaSogliaPagamentiGiornalieraCmd;
 import neo.bank.carta.application.ports.input.dto.ImpostaSogliaPagamentiMensileCmd;
 import neo.bank.carta.application.ports.input.dto.ImpostaStatoCartaCmd;
+import neo.bank.carta.application.ports.input.dto.RecuperaCartaDaIbanCmd;
+import neo.bank.carta.application.ports.input.dto.RecuperaCartaDaNumeroCmd;
 import neo.bank.carta.application.ports.output.CartaIbanProjectionRepositoryPort;
 import neo.bank.carta.application.ports.output.CartaOutputPort;
 import neo.bank.carta.application.ports.output.NumeroCartaProjectionRepositoryPort;
 import neo.bank.carta.domain.models.aggregates.Carta;
 import neo.bank.carta.domain.models.vo.DatiCartaView;
-import neo.bank.carta.domain.models.vo.Iban;
 import neo.bank.carta.domain.models.vo.IdCarta;
 import neo.bank.carta.domain.models.vo.NumeroCarta;
 import neo.bank.carta.domain.services.AnagraficaClienteService;
@@ -41,17 +42,18 @@ public class CartaUseCase {
     @Inject
     private CartaIbanProjectionRepositoryPort cartaIbanProjectionRepositoryPort;
     
-    public Carta recuperaCartaDaNumeroCarta(NumeroCarta numeroCarta) {
-        log.info("Recupero info carta [{}]", numeroCarta.numero());
-        IdCarta idCarta = recuperaIdCarta(numeroCarta);
+    public Carta recuperaCartaDaNumeroCarta(RecuperaCartaDaNumeroCmd cmd) {
+        log.info("Recupero info carta [{}]", cmd.getNumeroCarta().numero());
+        IdCarta idCarta = recuperaIdCarta(cmd.getNumeroCarta());
         Carta carta = cartaOutputPort.recuperaDaId(idCarta);
+        carta.verificaAccessoCliente(cmd.getUsernameCliente());
         log.info("Recupero terminato");
         return carta;
     }
     
-    public List<DatiCartaView> recuperaCarteDaIban(Iban iban) {
-        log.info("Recupero carte da iban [{}]", iban.codice());
-        List<DatiCartaView> datiCarte = cartaIbanProjectionRepositoryPort.recuperaDaIban(iban);
+    public List<DatiCartaView> recuperaCarteDaIban(RecuperaCartaDaIbanCmd cmd) {
+        log.info("Recupero carte da iban [{}]", cmd.getIban().codice());
+        List<DatiCartaView> datiCarte = cartaIbanProjectionRepositoryPort.recuperaDaIbanEIntestatario(cmd.getIban(), cmd.getUsernameCliente());
         log.info("Recupero terminato");
         return datiCarte;
     }
@@ -61,7 +63,7 @@ public class CartaUseCase {
         Carta carta = Carta.crea(generatoreNumeroCartaService, anagraficaContoCorrenteService, cmd.getUsernameCliente(), cmd.getIban(), anagraficaClienteService);
         cartaOutputPort.salva(carta);
         numeroCartaProjectionRepositoryPort.salva(carta.getNumeroCarta(), carta.getIdCarta());
-        cartaIbanProjectionRepositoryPort.salva(carta.getNumeroCarta(), cmd.getIban(), carta.getIntestatarioCarta(), carta.getDataScadenza());
+        cartaIbanProjectionRepositoryPort.salva(carta.getNumeroCarta(), cmd.getIban(), carta.getIntestatarioCarta(), carta.getDataScadenza(), cmd.getUsernameCliente());
         log.info("Comando [creaCarta] terminato...");
     }
 

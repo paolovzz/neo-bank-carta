@@ -12,6 +12,7 @@ import neo.bank.carta.domain.models.vo.DatiCartaView;
 import neo.bank.carta.domain.models.vo.Iban;
 import neo.bank.carta.domain.models.vo.IntestatarioCarta;
 import neo.bank.carta.domain.models.vo.NumeroCarta;
+import neo.bank.carta.domain.models.vo.UsernameCliente;
 import neo.bank.carta.framework.adapter.output.mongodb.entities.CartaIbanProjectionEntity;
 
 @ApplicationScoped
@@ -20,9 +21,9 @@ public class CartaIbanProjectionRepositoryImpl implements PanacheMongoRepository
     
     
     @Override
-    public List<DatiCartaView> recuperaDaIban(Iban iban) {
+    public List<DatiCartaView> recuperaDaIbanEIntestatario(Iban iban, UsernameCliente usernameCliente) {
         
-        List<CartaIbanProjectionEntity> listaNumeroCarta = find("iban", iban.codice()).list();
+        List<CartaIbanProjectionEntity> listaNumeroCarta = find("iban=?1 AND usernameCliente=?2", iban.codice(), usernameCliente.username()).list();
         if(listaNumeroCarta != null && !listaNumeroCarta.isEmpty() ) {
             return listaNumeroCarta.stream().map(entity -> {
                 DatiCartaView view = new DatiCartaView();
@@ -40,9 +41,9 @@ public class CartaIbanProjectionRepositoryImpl implements PanacheMongoRepository
 
     @Override
     public void salva(NumeroCarta numeroCarta, Iban iban, IntestatarioCarta intestatarioCarta,
-            DataScadenza dataScadenza) {
+            DataScadenza dataScadenza, UsernameCliente usernameCliente) {
         log.info("Aggiorno la projection...");
-        persist(new CartaIbanProjectionEntity(numeroCarta.numero(), iban.codice(), intestatarioCarta.intestatario(), dataScadenza.dataOra().toLocalDate()));
+        persist(new CartaIbanProjectionEntity(numeroCarta.numero(), iban.codice(), intestatarioCarta.intestatario(), dataScadenza.dataOra().toLocalDate(), usernameCliente.username()));
     }
     
 }

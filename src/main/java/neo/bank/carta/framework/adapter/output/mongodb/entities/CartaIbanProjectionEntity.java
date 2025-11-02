@@ -23,12 +23,14 @@ public class CartaIbanProjectionEntity extends PanacheMongoEntityBase {
     private String iban;
     private String intestatario;
     private LocalDate dataScadenza;
+    private String usernameCliente;
 
-    public CartaIbanProjectionEntity(String numeroCarta, String iban, String intestatario, LocalDate dataScadenza) {
+    public CartaIbanProjectionEntity(String numeroCarta, String iban, String intestatario, LocalDate dataScadenza, String username) {
         this.numeroCarta = numeroCarta;
         this.iban = iban;
         this.intestatario = intestatario;
         this.dataScadenza = dataScadenza;
+        this.usernameCliente = username;
     }
     
 }

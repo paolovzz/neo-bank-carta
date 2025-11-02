@@ -12,6 +12,5 @@ import lombok.Setter;
 public class CreaCartaRequest {
     
 
-    private String username;
     private String iban;
 }
