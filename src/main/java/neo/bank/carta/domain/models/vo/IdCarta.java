@@ -16,5 +16,6 @@ public class IdCarta {
                     IdCarta.class.getSimpleName(),
                     CodiceErrore.ID_NON_PUO_ESSERE_NULL.getCodice());
         }
+        this.id = id;
     }
 }
