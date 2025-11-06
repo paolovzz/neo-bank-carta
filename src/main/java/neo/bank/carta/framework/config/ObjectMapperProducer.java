@@ -21,7 +21,6 @@ public class ObjectMapperProducer {
         mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         mapper.findAndRegisterModules();
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        // mapper.configure(MapperFeature.INFER_CREATOR_FROM_CONSTRUCTOR_PROPERTIES, true);
 
         return mapper;
     }
