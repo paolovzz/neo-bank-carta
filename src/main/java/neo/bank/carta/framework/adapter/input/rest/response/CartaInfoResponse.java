@@ -23,18 +23,18 @@ public class CartaInfoResponse {
 
 
     public CartaInfoResponse(Carta carta) {
-        this.idCarta = carta.getIdCarta().id();
+        this.idCarta = carta.getIdCarta().getId();
         this.sogliaPagamentiGiornaliera = carta.getSogliaPagamentiGiornaliera();
         this.sogliaPagamentiMensile = carta.getSogliaPagamentiMensile();
-        this.dataEmissione = carta.getDataEmissione().dataOra();
-        this.dataScadenza = carta.getDataScadenza().dataOra();
+        this.dataEmissione = carta.getDataEmissione().getDataOra();
+        this.dataScadenza = carta.getDataScadenza().getDataOra();
         this.statoCarta = carta.getStatoCarta().name();
-        this.iban = carta.getIban().codice();
-        this.usernameCliente = carta.getUsernameCliente().username();
-        this.numeroCarta = carta.getNumeroCarta().numero();
+        this.iban = carta.getIban().getCodice();
+        this.usernameCliente = carta.getUsernameCliente().getUsername();
+        this.numeroCarta = carta.getNumeroCarta().getNumero();
         this.saldoDisponibile = carta.getSaldoDisponibile();
         this.abilitazionePagamentiOnline = carta.getAbilitazionePagamentoOnline().name();
-        this.intestatario = carta.getIntestatarioCarta().intestatario();
+        this.intestatario = carta.getIntestatarioCarta().getIntestatario();
     }
 
     

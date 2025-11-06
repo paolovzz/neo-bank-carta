@@ -16,12 +16,12 @@ public class NumeroCartaProjectionRepositoryImpl implements PanacheMongoReposito
     @Override
     public void salva(NumeroCarta numeroCarta, IdCarta idCarta) {
         log.info("Aggiorno la projection...");
-        persist(new NumeroCartaProjectionEntity(numeroCarta.numero(), idCarta.id()));
+        persist(new NumeroCartaProjectionEntity(numeroCarta.getNumero(), idCarta.getId()));
     }
 
     @Override
     public IdCarta recuperaDaNumeroCarta(NumeroCarta numeroCarta) {
-       NumeroCartaProjectionEntity entity = findById(numeroCarta.numero());
+       NumeroCartaProjectionEntity entity = findById(numeroCarta.getNumero());
         return entity == null ? null : new IdCarta(entity.getIdCarta());
     }
 

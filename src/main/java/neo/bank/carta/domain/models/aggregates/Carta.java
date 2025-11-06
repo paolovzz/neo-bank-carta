@@ -76,7 +76,7 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
             throw new BusinessRuleException(String.format("La Soglia pagamenti giornaliero non puo' essere maggiore della soglia pagamenti mensile"));  
         }
         if(!usernameCliente.equals(this.usernameCliente)) {
-            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.username()));  
+            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.getUsername()));  
         }
         if(!iban.equals(this.iban)) {
             throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
@@ -89,7 +89,7 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
             throw new BusinessRuleException(String.format("Soglia pagamenti mensile non puo' essere maggiore della soglia pagamenti giornaliera"));  
         }
         if(!usernameCliente.equals(this.usernameCliente)) {
-            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.username()));  
+            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.getUsername()));  
         }
         if(!iban.equals(this.iban)) {
             throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
@@ -99,7 +99,7 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
 
     public void impostaAbilitazionePagamentiOnline(Iban iban, UsernameCliente usernameCliente, boolean abilitazionePagamentiOnline) {
         if(!usernameCliente.equals(this.usernameCliente)) {
-            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.username()));  
+            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.getUsername()));  
         }
         if(!iban.equals(this.iban)) {
             throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
@@ -113,7 +113,7 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
 
     public void impostaStatoCarta(Iban iban, UsernameCliente usernameCliente, boolean statoCarta) {
         if(!usernameCliente.equals(this.usernameCliente)) {
-            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.username()));  
+            throw new BusinessRuleException(String.format("Cliente [%s] non autorizzato ad operare sulla carta", usernameCliente.getUsername()));  
         }
         if(!iban.equals(this.iban)) {
             throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
@@ -127,29 +127,29 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
 
      public void verificaAccessoCliente(UsernameCliente usernameCliente) {
         if( !this.usernameCliente.equals(usernameCliente)){
-            throw new BusinessRuleException(String.format("Accesso alla carta non autorizzato per il cliente [%s]", usernameCliente.username()));
+            throw new BusinessRuleException(String.format("Accesso alla carta non autorizzato per il cliente [%s]", usernameCliente.getUsername()));
         }
     }
 
     private void apply(CartaCreata event) {
-        this.dataEmissione = event.dataEmissione();
-        this.dataScadenza = event.dataScadenza();
+        this.dataEmissione = event.getDataEmissione();
+        this.dataScadenza = event.getDataScadenza();
         this.statoCarta = StatoCarta.ATTIVA;
-        this.iban = event.iban();
-        this.idCarta = event.idCarta();
-        this.saldoDisponibile = event.saldoDisponibile();
-        this.usernameCliente = event.usernameCliente();
-        this.numeroCarta = event.numeroCarta();
-        this.intestatarioCarta = event.intestatarioCarta();
+        this.iban = event.getIban();
+        this.idCarta = event.getIdCarta();
+        this.saldoDisponibile = event.getSaldoDisponibile();
+        this.usernameCliente = event.getUsernameCliente();
+        this.numeroCarta = event.getNumeroCarta();
+        this.intestatarioCarta = event.getIntestatarioCarta();
 
     }
 
     private void apply(SogliaPagamentiGiornalieriImpostata event) {
-        sogliaPagamentiGiornaliera = event.nuovaSogliaPagamento();
+        sogliaPagamentiGiornaliera = event.getNuovaSogliaPagamento();
     }
 
     private void apply(SogliaPagamentiMensiliImpostata event) {
-        sogliaPagamentiMensile = event.nuovaSogliaPagamento();
+        sogliaPagamentiMensile = event.getNuovaSogliaPagamento();
     }
 
     private void apply(PagamentiOnlineAbilitati event) {

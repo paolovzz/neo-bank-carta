@@ -26,8 +26,8 @@ public class AnagraficaClienteServiceImpl implements AnagraficaClienteService {
 
     @Override
     public IntestatarioCarta richiediVerificaCliente(UsernameCliente usernameCliente) {
-        log.info("Chiedo verifica riguardante il cliente della carta [{}]", usernameCliente.username());
-        Response response = client.recuperaCliente(usernameCliente.username());
+        log.info("Chiedo verifica riguardante il cliente della carta [{}]", usernameCliente.getUsername());
+        Response response = client.recuperaCliente(usernameCliente.getUsername());
         log.info("Verifica conclusa positivamente");
         ClienteInfoResponse infoRes = response.readEntity(ClienteInfoResponse.class);
         return new IntestatarioCarta(infoRes.getNome().concat(" ").concat(infoRes.getCognome()));

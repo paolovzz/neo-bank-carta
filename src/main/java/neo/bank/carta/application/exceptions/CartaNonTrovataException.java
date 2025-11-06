@@ -6,10 +6,10 @@ import neo.bank.carta.domain.models.vo.NumeroCarta;
 public class CartaNonTrovataException extends RuntimeException {
     
     public CartaNonTrovataException(NumeroCarta numeroCarta) {
-        super(String.format("Carta con numero [%s] non trovata...", numeroCarta.numero()));
+        super(String.format("Carta con numero [%s] non trovata...", numeroCarta.getNumero()));
     }
     
     public CartaNonTrovataException(IdCarta idCarta) {
-        super(String.format("Carta con id [%s] non trovata...", idCarta.id()));
+        super(String.format("Carta con id [%s] non trovata...", idCarta.getId()));
     }
 }

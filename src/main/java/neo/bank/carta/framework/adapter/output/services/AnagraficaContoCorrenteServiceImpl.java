@@ -23,9 +23,9 @@ public class AnagraficaContoCorrenteServiceImpl implements AnagraficaContoCorren
 
     @Override
     public boolean richiediVerificaContoCorrente(UsernameCliente usernameCliente,  Iban iban) {
-       log.info("Chiedo verifica riguardante l'iban e il cliente della carta [{}]", usernameCliente.username());
+       log.info("Chiedo verifica riguardante l'iban e il cliente della carta [{}]", usernameCliente.getUsername());
         try {
-            client.verifica(iban.codice(), usernameCliente.username());
+            client.verifica(iban.getCodice(), usernameCliente.getUsername());
             log.info("Verifica conclusa positivamente");
             return true;
         } catch(WebApplicationException ex) {

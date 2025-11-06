@@ -1,7 +1,9 @@
 package neo.bank.carta.domain.models.events;
 
+import lombok.Value;
 
-public record CartaAttivata() implements EventPayload {
+@Value
+public class CartaAttivata implements EventPayload {
 
     @Override
     public String eventType() {

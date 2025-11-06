@@ -27,12 +27,12 @@ public class CartaRepositoryImpl implements PanacheMongoRepository<EventStoreEnt
 
     @Override
     public void save(IdCarta idCarta, List<EventPayload> events) {
-        long nextSequence = getNextSequence(idCarta.id());
+        long nextSequence = getNextSequence(idCarta.getId());
         try {
             for (EventPayload ev : events) {
                 EventStoreEntity entity;
 
-                entity = new EventStoreEntity(idCarta.id(), ev.eventType(), mapper.writeValueAsString(ev),
+                entity = new EventStoreEntity(idCarta.getId(), ev.eventType(), mapper.writeValueAsString(ev),
                         nextSequence);
 
                 entity.persist();

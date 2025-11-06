@@ -1,7 +1,9 @@
 package neo.bank.carta.domain.models.events;
 
+import lombok.Value;
 
-public record PagamentiOnlineNonAbilitati() implements EventPayload {
+@Value
+public class PagamentiOnlineNonAbilitati implements EventPayload {
 
     @Override
     public String eventType() {

@@ -1,7 +1,11 @@
 package neo.bank.carta.domain.models.events;
 
+import lombok.Value;
 
-public record SogliaPagamentiMensiliImpostata(int nuovaSogliaPagamento) implements EventPayload {
+@Value
+public class SogliaPagamentiMensiliImpostata implements EventPayload {
+
+    private int nuovaSogliaPagamento;
 
     @Override
     public String eventType() {

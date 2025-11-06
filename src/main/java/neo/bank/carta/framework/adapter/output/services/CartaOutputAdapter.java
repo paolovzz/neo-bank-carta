@@ -25,12 +25,12 @@ public class CartaOutputAdapter  implements CartaOutputPort{
 
         List<EventPayload> events = cc.popChanges();
         ccRepo.save(cc.getIdCarta(), events);
-        publisherPort.publish(Carta.AGGREGATE_NAME, cc.getIdCarta().id(), events);
+        publisherPort.publish(Carta.AGGREGATE_NAME, cc.getIdCarta().getId(), events);
     }
 
     @Override
     public Carta recuperaDaId(IdCarta idCarta) {
-        Carta cliente = ccRepo.findById(idCarta.id());
+        Carta cliente = ccRepo.findById(idCarta.getId());
         if(cliente == null) {
             throw new CartaNonTrovataException(idCarta);
         }

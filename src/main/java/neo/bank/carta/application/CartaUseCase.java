@@ -43,7 +43,7 @@ public class CartaUseCase {
     private CartaIbanProjectionRepositoryPort cartaIbanProjectionRepositoryPort;
     
     public Carta recuperaCartaDaNumeroCarta(RecuperaCartaDaNumeroCmd cmd) {
-        log.info("Recupero info carta [{}]", cmd.getNumeroCarta().numero());
+        log.info("Recupero info carta [{}]", cmd.getNumeroCarta().getNumero());
         IdCarta idCarta = recuperaIdCarta(cmd.getNumeroCarta());
         Carta carta = cartaOutputPort.recuperaDaId(idCarta);
         carta.verificaAccessoCliente(cmd.getUsernameCliente());
@@ -52,7 +52,7 @@ public class CartaUseCase {
     }
     
     public List<DatiCartaView> recuperaCarteDaIban(RecuperaCartaDaIbanCmd cmd) {
-        log.info("Recupero carte da iban [{}]", cmd.getIban().codice());
+        log.info("Recupero carte da iban [{}]", cmd.getIban().getCodice());
         List<DatiCartaView> datiCarte = cartaIbanProjectionRepositoryPort.recuperaDaIbanEIntestatario(cmd.getIban(), cmd.getUsernameCliente());
         log.info("Recupero terminato");
         return datiCarte;

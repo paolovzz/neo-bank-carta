@@ -11,14 +11,14 @@ public class CartaCreataConverter
     @Override
     public IECartaCreata convert(CartaCreata domainEvent) {
         return new IECartaCreata(
-            domainEvent.idCarta().id(),
-            domainEvent.usernameCliente().username(),
-            domainEvent.numeroCarta().numero(),
-            domainEvent.iban().codice(),
-            domainEvent.dataEmissione().dataOra(),
-            domainEvent.dataScadenza().dataOra(),
-            domainEvent.saldoDisponibile(),
-            domainEvent.intestatarioCarta().intestatario()
+            domainEvent.getIdCarta().getId(),
+            domainEvent.getUsernameCliente().getUsername(),
+            domainEvent.getNumeroCarta().getNumero(),
+            domainEvent.getIban().getCodice(),
+            domainEvent.getDataEmissione().getDataOra(),
+            domainEvent.getDataScadenza().getDataOra(),
+            domainEvent.getSaldoDisponibile(),
+            domainEvent.getIntestatarioCarta().getIntestatario()
         );
     }
 

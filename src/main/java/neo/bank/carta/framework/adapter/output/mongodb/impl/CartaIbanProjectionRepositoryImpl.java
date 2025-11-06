@@ -22,8 +22,8 @@ public class CartaIbanProjectionRepositoryImpl implements PanacheMongoRepository
     
     @Override
     public List<DatiCartaView> recuperaDaIbanEIntestatario(Iban iban, UsernameCliente usernameCliente) {
-        
-        List<CartaIbanProjectionEntity> listaNumeroCarta = find("iban=?1 AND usernameCliente=?2", iban.codice(), usernameCliente.username()).list();
+
+        List<CartaIbanProjectionEntity> listaNumeroCarta = find("iban=?1 AND usernameCliente=?2", iban.getCodice(), usernameCliente.getUsername()).list();
         if(listaNumeroCarta != null && !listaNumeroCarta.isEmpty() ) {
             return listaNumeroCarta.stream().map(entity -> {
                 DatiCartaView view = new DatiCartaView();
@@ -43,7 +43,7 @@ public class CartaIbanProjectionRepositoryImpl implements PanacheMongoRepository
     public void salva(NumeroCarta numeroCarta, Iban iban, IntestatarioCarta intestatarioCarta,
             DataScadenza dataScadenza, UsernameCliente usernameCliente) {
         log.info("Aggiorno la projection...");
-        persist(new CartaIbanProjectionEntity(numeroCarta.numero(), iban.codice(), intestatarioCarta.intestatario(), dataScadenza.dataOra().toLocalDate(), usernameCliente.username()));
+        persist(new CartaIbanProjectionEntity(numeroCarta.getNumero(), iban.getCodice(), intestatarioCarta.getIntestatario(), dataScadenza.getDataOra().toLocalDate(), usernameCliente.getUsername()));
     }
     
 }
