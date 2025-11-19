@@ -17,7 +17,6 @@ public class CartaCreataConverter
             domainEvent.getIban().getCodice(),
             domainEvent.getDataEmissione().getDataOra(),
             domainEvent.getDataScadenza().getDataOra(),
-            domainEvent.getSaldoDisponibile(),
             domainEvent.getIntestatarioCarta().getIntestatario()
         );
     }

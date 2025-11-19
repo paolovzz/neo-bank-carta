@@ -13,6 +13,5 @@ public class IECartaCreata implements Serializable {
     private String iban;
     private LocalDateTime dataEmissione;
     private LocalDateTime dataScadenza;
-    private double saldoDisponibile;
     private String intestatario;
 }

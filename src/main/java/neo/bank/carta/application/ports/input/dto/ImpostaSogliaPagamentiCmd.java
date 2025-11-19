@@ -6,7 +6,7 @@ import neo.bank.carta.domain.models.vo.NumeroCarta;
 import neo.bank.carta.domain.models.vo.UsernameCliente;
 
 @Value
-public class ImpostaSogliaPagamentiGiornalieraCmd {
+public class ImpostaSogliaPagamentiCmd {
     
     private NumeroCarta numeroCarta;
     private Iban iban;

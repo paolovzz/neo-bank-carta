@@ -24,6 +24,4 @@ public class NumeroCartaProjectionRepositoryImpl implements PanacheMongoReposito
        NumeroCartaProjectionEntity entity = findById(numeroCarta.getNumero());
         return entity == null ? null : new IdCarta(entity.getIdCarta());
     }
-
-
 }

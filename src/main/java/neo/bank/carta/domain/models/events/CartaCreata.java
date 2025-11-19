@@ -18,7 +18,6 @@ public class CartaCreata implements EventPayload {
     private Iban iban;
     private DataEmissione dataEmissione;
     private DataScadenza dataScadenza;
-    private double saldoDisponibile;
     private IntestatarioCarta intestatarioCarta;
 
     @Override

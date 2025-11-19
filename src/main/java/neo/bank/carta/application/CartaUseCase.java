@@ -8,8 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import neo.bank.carta.application.exceptions.CartaNonTrovataException;
 import neo.bank.carta.application.ports.input.dto.CreaCartaCmd;
 import neo.bank.carta.application.ports.input.dto.ImpostaAbilitazionePagamentiOnlineCmd;
-import neo.bank.carta.application.ports.input.dto.ImpostaSogliaPagamentiGiornalieraCmd;
-import neo.bank.carta.application.ports.input.dto.ImpostaSogliaPagamentiMensileCmd;
+import neo.bank.carta.application.ports.input.dto.ImpostaSogliaPagamentiCmd;
 import neo.bank.carta.application.ports.input.dto.ImpostaStatoCartaCmd;
 import neo.bank.carta.application.ports.input.dto.RecuperaCartaDaIbanCmd;
 import neo.bank.carta.application.ports.input.dto.RecuperaCartaDaNumeroCmd;
@@ -67,16 +66,17 @@ public class CartaUseCase {
         log.info("Comando [creaCarta] terminato...");
     }
 
-    public void impostaSogliaPagamentiGiornaliera(ImpostaSogliaPagamentiGiornalieraCmd cmd) {
+    public void impostaSogliaPagamentiGiornaliera(ImpostaSogliaPagamentiCmd cmd) {
         log.info("Comando [impostaSogliaPagamentiGiornaliera] in esecuzione...");
         IdCarta idCarta = recuperaIdCarta(cmd.getNumeroCarta());
+
         Carta carta = cartaOutputPort.recuperaDaId(idCarta);
         carta.impostaSogliaPagamentoGiornaliero(cmd.getIban(), cmd.getUsernameCliente(), cmd.getNuovaSogliaPagamenti() );
         cartaOutputPort.salva(carta);
         log.info("Comando [impostaSogliaPagamentiGiornaliera] terminato...");
     }
 
-    public void impostaSogliaPagamentiMensile(ImpostaSogliaPagamentiMensileCmd cmd) {
+    public void impostaSogliaPagamentiMensile(ImpostaSogliaPagamentiCmd cmd) {
         log.info("Comando [impostaSogliaPagamentiMensile] in esecuzione...");
         IdCarta idCarta = recuperaIdCarta(cmd.getNumeroCarta());
         Carta carta = cartaOutputPort.recuperaDaId(idCarta);

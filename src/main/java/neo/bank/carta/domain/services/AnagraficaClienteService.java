@@ -5,5 +5,5 @@ import neo.bank.carta.domain.models.vo.UsernameCliente;
 
 public interface AnagraficaClienteService {
     
-    IntestatarioCarta richiediVerificaCliente(UsernameCliente usernameCliente);
+    IntestatarioCarta recuperaDatiIntestatario(UsernameCliente usernameCliente);
 }
