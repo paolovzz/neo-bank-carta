@@ -25,6 +25,7 @@ import neo.bank.carta.domain.models.vo.Iban;
 import neo.bank.carta.domain.models.vo.IdCarta;
 import neo.bank.carta.domain.models.vo.IntestatarioCarta;
 import neo.bank.carta.domain.models.vo.NumeroCarta;
+import neo.bank.carta.domain.models.vo.SogliaPagamenti;
 import neo.bank.carta.domain.models.vo.UsernameCliente;
 import neo.bank.carta.domain.services.AnagraficaClienteService;
 import neo.bank.carta.domain.services.AnagraficaContoCorrenteService;
@@ -39,8 +40,8 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
     public static final String AGGREGATE_NAME = "CARTA";
     
     private IdCarta idCarta;
-    private int sogliaPagamentiGiornaliera = 2500;
-    private int sogliaPagamentiMensile = 3000;
+    private SogliaPagamenti sogliaPagamentiGiornaliera = new SogliaPagamenti(2500);
+    private SogliaPagamenti sogliaPagamentiMensile = new SogliaPagamenti(3000);
     private DataEmissione dataEmissione;
     private DataScadenza dataScadenza;
     private Iban iban;
@@ -68,33 +69,24 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
         return carta;
     }
 
-    public void impostaSogliaPagamentoGiornaliero(Iban iban, UsernameCliente usernameCliente, int nuovaSogliaPagamento) {
-        if(nuovaSogliaPagamento > sogliaPagamentiMensile) {
+    public void impostaSogliaPagamentiGiornaliera(UsernameCliente usernameCliente, SogliaPagamenti nuovaSogliaPagamento) {
+        verificaIntestatario(usernameCliente);
+        if(nuovaSogliaPagamento.getSoglia() > sogliaPagamentiMensile.getSoglia()) {
             throw new BusinessRuleException(String.format("La Soglia pagamenti giornaliero non puo' essere maggiore della soglia pagamenti mensile"));  
-        }
-        verificaAccessoCliente(usernameCliente);
-        if(!iban.equals(this.iban)) {
-            throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
         }
         events(new SogliaPagamentiGiornalieriImpostata(nuovaSogliaPagamento));
     }
 
-    public void impostaSogliaPagamentoMensile(Iban iban, UsernameCliente usernameCliente, int nuovaSogliaPagamento) {
-        if(nuovaSogliaPagamento < sogliaPagamentiGiornaliera) {
+    public void impostaSogliaPagamentiMensile(UsernameCliente usernameCliente, SogliaPagamenti nuovaSogliaPagamento) {
+        verificaIntestatario(usernameCliente);
+        if(nuovaSogliaPagamento.getSoglia() < sogliaPagamentiGiornaliera.getSoglia()) {
             throw new BusinessRuleException(String.format("Soglia pagamenti mensile non puo' essere maggiore della soglia pagamenti giornaliera"));  
-        }
-        verificaAccessoCliente(usernameCliente);
-        if(!iban.equals(this.iban)) {
-            throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
         }
         events(new SogliaPagamentiMensiliImpostata(nuovaSogliaPagamento));
     }
 
-    public void impostaAbilitazionePagamentiOnline(Iban iban, UsernameCliente usernameCliente, boolean abilitazionePagamentiOnline) {
-        verificaAccessoCliente(usernameCliente);
-        if(!iban.equals(this.iban)) {
-            throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
-        }
+    public void impostaAbilitazionePagamentiOnline(UsernameCliente usernameCliente, boolean abilitazionePagamentiOnline) {
+        verificaIntestatario(usernameCliente);
         if(abilitazionePagamentiOnline) {
             events(new PagamentiOnlineAbilitati());
         } else {
@@ -102,8 +94,8 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
         }
     }
 
-    public void impostaStatoCarta(Iban iban, UsernameCliente usernameCliente, boolean statoCarta) {
-        verificaAccessoCliente(usernameCliente);
+    public void impostaStatoCarta(UsernameCliente usernameCliente, boolean statoCarta) {
+        verificaIntestatario(usernameCliente);
         if(!iban.equals(this.iban)) {
             throw new BusinessRuleException("Iban del richiedente non corrisponde a quello collegato alla carta");  
         }
@@ -114,7 +106,7 @@ public class Carta extends AggregateRoot<Carta> implements Applier  {
         }
     }
 
-     public void verificaAccessoCliente(UsernameCliente usernameCliente) {
+     public void verificaIntestatario(UsernameCliente usernameCliente) {
         if( !this.usernameCliente.equals(usernameCliente)){
             throw new AccessoNonAutorizzatoException(usernameCliente.getUsername());
         }

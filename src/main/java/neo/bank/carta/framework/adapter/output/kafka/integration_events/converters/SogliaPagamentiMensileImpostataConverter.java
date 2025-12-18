@@ -10,7 +10,7 @@ public class SogliaPagamentiMensileImpostataConverter implements IntegrationEven
     @Override
     public IESogliaPagamentiMensileImpostata convert(SogliaPagamentiMensiliImpostata ev) {
 
-        return new IESogliaPagamentiMensileImpostata(ev.getNuovaSogliaPagamento());
+        return new IESogliaPagamentiMensileImpostata(ev.getNuovaSogliaPagamento().getSoglia());
     }
 
     @Override

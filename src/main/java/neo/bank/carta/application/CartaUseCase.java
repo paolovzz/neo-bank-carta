@@ -45,7 +45,7 @@ public class CartaUseCase {
         log.info("Recupero info carta [{}]", cmd.getNumeroCarta().getNumero());
         IdCarta idCarta = recuperaIdCarta(cmd.getNumeroCarta());
         Carta carta = cartaOutputPort.recuperaDaId(idCarta);
-        carta.verificaAccessoCliente(cmd.getUsernameCliente());
+        carta.verificaIntestatario(cmd.getUsernameCliente());
         log.info("Recupero terminato");
         return carta;
     }
@@ -71,7 +71,7 @@ public class CartaUseCase {
         IdCarta idCarta = recuperaIdCarta(cmd.getNumeroCarta());
 
         Carta carta = cartaOutputPort.recuperaDaId(idCarta);
-        carta.impostaSogliaPagamentoGiornaliero(cmd.getIban(), cmd.getUsernameCliente(), cmd.getNuovaSogliaPagamenti() );
+        carta.impostaSogliaPagamentiGiornaliera(cmd.getUsernameCliente(), cmd.getNuovaSogliaPagamenti() );
         cartaOutputPort.salva(carta);
         log.info("Comando [impostaSogliaPagamentiGiornaliera] terminato...");
     }
@@ -80,7 +80,7 @@ public class CartaUseCase {
         log.info("Comando [impostaSogliaPagamentiMensile] in esecuzione...");
         IdCarta idCarta = recuperaIdCarta(cmd.getNumeroCarta());
         Carta carta = cartaOutputPort.recuperaDaId(idCarta);
-        carta.impostaSogliaPagamentoMensile(cmd.getIban(), cmd.getUsernameCliente(), cmd.getNuovaSogliaPagamenti());
+        carta.impostaSogliaPagamentiMensile(cmd.getUsernameCliente(), cmd.getNuovaSogliaPagamenti());
         cartaOutputPort.salva(carta);
         log.info("Comando [impostaSogliaPagamentiMensile] terminato...");
     }
@@ -89,7 +89,7 @@ public class CartaUseCase {
         log.info("Comando [impostaStatoCarta] in esecuzione...");
         IdCarta idCarta = recuperaIdCarta(cmd.getNumeroCarta());
         Carta carta = cartaOutputPort.recuperaDaId(idCarta);
-        carta.impostaStatoCarta(cmd.getIban(), cmd.getUsernameCliente(), cmd.isStatoCarta() );
+        carta.impostaStatoCarta( cmd.getUsernameCliente(), cmd.isStatoCarta() );
         cartaOutputPort.salva(carta);
         log.info("Comando [impostaStatoCarta] terminato...");
     }
@@ -98,7 +98,7 @@ public class CartaUseCase {
         log.info("Comando [impostaAbilitazionePagamentiOnline] in esecuzione...");
         IdCarta idCarta = recuperaIdCarta(cmd.getNumeroCarta());
         Carta carta = cartaOutputPort.recuperaDaId(idCarta);
-        carta.impostaAbilitazionePagamentiOnline(cmd.getIban(), cmd.getUsernameCliente(), cmd.isAbilitazione() );
+        carta.impostaAbilitazionePagamentiOnline( cmd.getUsernameCliente(), cmd.isAbilitazione() );
         cartaOutputPort.salva(carta);
         log.info("Comando [impostaAbilitazionePagamentiOnline] terminato...");
     }

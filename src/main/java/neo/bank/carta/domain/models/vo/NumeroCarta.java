@@ -11,7 +11,7 @@ public class NumeroCarta {
     private String numero;
 
     public NumeroCarta(String numero) {
-        if (numero == null) {
+        if (numero == null || numero.isBlank()) {
             throw new ValidazioneException(
                     NumeroCarta.class.getSimpleName(),
                     CodiceErrore.NUMERO_CARTA_NON_PUO_ESSERE_NULL.getCodice());

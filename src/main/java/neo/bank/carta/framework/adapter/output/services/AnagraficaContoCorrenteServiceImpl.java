@@ -25,14 +25,12 @@ public class AnagraficaContoCorrenteServiceImpl implements AnagraficaContoCorren
     public boolean richiediVerificaContoCorrente(UsernameCliente usernameCliente,  Iban iban) {
        log.info("Chiedo verifica riguardante l'iban e il cliente della carta [{}]", usernameCliente.getUsername());
         try {
-            client.verifica(iban.getCodice(), usernameCliente.getUsername());
+            client.verificaEsistenzaIban(iban.getCodice(), usernameCliente.getUsername());
             log.info("Verifica conclusa positivamente");
             return true;
         } catch(WebApplicationException ex) {
-            if(ex.getResponse().getStatus() == 404) {
-                return false;
-            }
-            throw ex;
+            log.error("Errore durante la verifica del conto corrente.", ex);
+            return false;
         }
     }
 }

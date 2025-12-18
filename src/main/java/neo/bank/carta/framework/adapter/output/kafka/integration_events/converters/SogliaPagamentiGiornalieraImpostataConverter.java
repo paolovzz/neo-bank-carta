@@ -10,7 +10,7 @@ public class SogliaPagamentiGiornalieraImpostataConverter implements Integration
     @Override
     public IESogliaPagamentiGiornalieraImpostata convert(SogliaPagamentiGiornalieriImpostata ev) {
 
-        return new IESogliaPagamentiGiornalieraImpostata(ev.getNuovaSogliaPagamento());
+        return new IESogliaPagamentiGiornalieraImpostata(ev.getNuovaSogliaPagamento().getSoglia());
     }
 
     @Override

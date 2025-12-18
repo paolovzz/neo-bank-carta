@@ -18,6 +18,7 @@ import neo.bank.carta.domain.models.aggregates.Carta;
 import neo.bank.carta.domain.models.vo.DatiCartaView;
 import neo.bank.carta.domain.models.vo.Iban;
 import neo.bank.carta.domain.models.vo.NumeroCarta;
+import neo.bank.carta.domain.models.vo.SogliaPagamenti;
 import neo.bank.carta.domain.models.vo.UsernameCliente;
 import neo.bank.carta.framework.adapter.input.rest.api.CartaApi;
 import neo.bank.carta.framework.adapter.input.rest.model.CartaInfoResponse;
@@ -42,26 +43,26 @@ public class CartaResource implements CartaApi{
 
     @Override
     public Response impostaAbilitazionePagamentiOnline(String xAuthenticatedUser, ImpostaAbilitazionePagamentiOnlineRequest request) {
-        app.impostaAbilitazionePagamentiOnline(new ImpostaAbilitazionePagamentiOnlineCmd(new NumeroCarta(request.getNumeroCarta()), new Iban(request.getIban()), new UsernameCliente(xAuthenticatedUser), request.getAbilitazionePagamentiOnline()));
+        app.impostaAbilitazionePagamentiOnline(new ImpostaAbilitazionePagamentiOnlineCmd(new NumeroCarta(request.getNumeroCarta()), new UsernameCliente(xAuthenticatedUser), request.getAbilitazionePagamentiOnline()));
         return Response.noContent().build();
     }
 
     @Override
     public Response impostaSogliaPagamentiGiornaliera(String xAuthenticatedUser,  ImpostaSogliaPagamentiRequest request) {
-        app.impostaSogliaPagamentiGiornaliera(new ImpostaSogliaPagamentiCmd(new NumeroCarta(request.getNumeroCarta()), new Iban(request.getIban()), new UsernameCliente(xAuthenticatedUser), request.getNuovaSoglia()));
+        app.impostaSogliaPagamentiGiornaliera(new ImpostaSogliaPagamentiCmd(new NumeroCarta(request.getNumeroCarta()), new UsernameCliente(xAuthenticatedUser), new SogliaPagamenti(request.getNuovaSoglia())));
         return Response.noContent().build();
     }
 
     @Override
     public Response impostaSogliaPagamentiMensile(String xAuthenticatedUser, ImpostaSogliaPagamentiRequest request) {
-        app.impostaSogliaPagamentiMensile(new ImpostaSogliaPagamentiCmd(new NumeroCarta(request.getNumeroCarta()), new Iban(request.getIban()), new UsernameCliente(xAuthenticatedUser), request.getNuovaSoglia()));
+        app.impostaSogliaPagamentiMensile(new ImpostaSogliaPagamentiCmd(new NumeroCarta(request.getNumeroCarta()), new UsernameCliente(xAuthenticatedUser), new SogliaPagamenti(request.getNuovaSoglia())));
         return Response.noContent().build();
     }
 
     @Override
     public Response impostaStatoCarta(String xAuthenticatedUser, ImpostaStatoCartaRequest request) {
         
-        app.impostaStatoCarta(new ImpostaStatoCartaCmd(new NumeroCarta(request.getNumeroCarta()), new Iban(request.getIban()), new UsernameCliente(xAuthenticatedUser), request.getStatoCarta()));
+        app.impostaStatoCarta(new ImpostaStatoCartaCmd(new NumeroCarta(request.getNumeroCarta()), new UsernameCliente(xAuthenticatedUser), request.getStatoCarta()));
         return Response.noContent().build();
     }
 
@@ -81,8 +82,8 @@ public class CartaResource implements CartaApi{
                                         .iban(carta.getIban().getCodice())
                                         .intestatario(carta.getIntestatarioCarta().getIntestatario())
                                         .numeroCarta(carta.getNumeroCarta().getNumero())
-                                        .sogliaPagamentiGiornaliera(carta.getSogliaPagamentiGiornaliera())
-                                        .sogliaPagamentiMensile(carta.getSogliaPagamentiMensile())
+                                        .sogliaPagamentiGiornaliera(carta.getSogliaPagamentiGiornaliera().getSoglia())
+                                        .sogliaPagamentiMensile(carta.getSogliaPagamentiMensile().getSoglia())
                                         .statoCarta(carta.getStatoCarta().name())
                                         .usernameCliente(carta.getUsernameCliente().getUsername())
                                         .build();

@@ -11,7 +11,7 @@ public class IntestatarioCarta {
     private String intestatario;
 
     public IntestatarioCarta(String intestatario) {
-        if (intestatario == null) {
+        if (intestatario == null || intestatario.isBlank()) {
             throw new ValidazioneException(
                     IntestatarioCarta.class.getSimpleName(),
                     CodiceErrore.INTESTATARIO_NON_PUO_ESSERE_NULL.getCodice());

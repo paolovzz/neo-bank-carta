@@ -11,7 +11,7 @@ public class IdCarta {
     private String id;
 
     public IdCarta(String id) {
-        if (id == null) {
+        if (id == null || id.isBlank()) {
             throw new ValidazioneException(
                     IdCarta.class.getSimpleName(),
                     CodiceErrore.ID_NON_PUO_ESSERE_NULL.getCodice());

@@ -9,7 +9,6 @@ import neo.bank.carta.domain.models.vo.UsernameCliente;
 public class ImpostaAbilitazionePagamentiOnlineCmd {
     
     private NumeroCarta numeroCarta;
-    private Iban iban;
     private UsernameCliente usernameCliente;
     private boolean abilitazione;
 }

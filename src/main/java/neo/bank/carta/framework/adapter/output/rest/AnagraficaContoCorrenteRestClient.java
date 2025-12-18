@@ -18,6 +18,6 @@ public interface AnagraficaContoCorrenteRestClient {
     @GET
     @Path("/{iban}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response verifica(@PathParam("iban") String iban, @HeaderParam("X-Authenticated-User") String username);
+    Response verificaEsistenzaIban(@PathParam("iban") String iban, @HeaderParam("X-Authenticated-User") String username);
 
 }
